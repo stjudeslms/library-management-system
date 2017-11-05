@@ -1,15 +1,13 @@
 package com.neotechlabs.librarymgmtservice.resource;
 
-import com.neotechlabs.librarymgmtservice.document.Books;
+import com.neotechlabs.librarymgmtservice.document.Book;
 import com.neotechlabs.librarymgmtservice.repository.BooksRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/books")
+@RequestMapping("/lms/inventory")
 public class BooksResource {
 
     private BooksRepository booksRepository;
@@ -19,7 +17,36 @@ public class BooksResource {
     }
 
     @GetMapping("/all")
-    public List<Books> getAll() {
+    public List<Book> getAll() {
         return booksRepository.findAll();
+    }
+
+    @PutMapping
+    public void insert(@RequestBody Book book) {
+        booksRepository.insert(book);
+    }
+
+    @PostMapping
+    public void update(@RequestBody Book book) {
+        booksRepository.save(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id")Integer id) {
+        booksRepository.delete(id);
+    }
+
+    @GetMapping("/{id}")
+    public Book getById(@PathVariable("id")Integer id) {
+        Book book = booksRepository.findById(id);
+        return book;
+    }
+
+    @GetMapping("/author/{name}")
+    public List<Book> getByAuthor(@PathVariable("name")String name) {
+        List<Book> books = booksRepository.findByAuthor(name);
+//        String authorName = name.replaceAll("%20", " ");
+//        List<Book> books = booksRepository.findByAuthor(authorName);
+        return books;
     }
 }
